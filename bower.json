@@ -1,0 +1,23 @@
+{
+  "name": "homesound",
+  "version": "0.0.0",
+  "homepage": "https://github.com/garysoed/homesound",
+  "authors": [
+    "Gary Soedarsono <garysoed@gmail.com>"
+  ],
+  "description": "Karaoke app",
+  "keywords": [
+    "karaoke"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "three.js": "~0.71.0",
+  }
+}
