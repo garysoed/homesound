@@ -40,9 +40,11 @@ function compile(entry, outFile) {
 function compileFiles(entries) {
   var files = glob.sync(entries);
   var fns = files.map(function(file) {
-    return function() {
-      compile(file, file);
+    var fn = function() {
+      return compile(file, file);
     };
+    fn.displayName = file;
+    return fn;
   });
   return gulp.parallel(fns);
 }
@@ -54,14 +56,14 @@ gulp.task('compile-player', function() {
 });
 
 gulp.task('test', gulp.series(
-    'compile-player',
+    gulp.task('compile-tests'),
     function _test(done) {
       runKarma(true, done);
     }
 ));
 
 gulp.task('test-server', gulp.series(
-    'compile-player',
+    gulp.task('compile-player'),
     function _test(done) {
       runKarma(false, done);
     }
