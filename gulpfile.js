@@ -69,5 +69,5 @@ gulp.task('test-server', gulp.series(
 
 gulp.task('watch', function _watchSources() {
   gulp.watch(['./player/*.js'], gulp.task('compile-player'));
-  gulp.watch(['./player/*_test.js'], gulp.task('compile-tests'));
+  gulp.watch(['./player/*_test.js', './player/*.js'], gulp.task('compile-tests'));
 });

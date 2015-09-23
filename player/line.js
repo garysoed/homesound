@@ -4,9 +4,16 @@ const __values__ = Symbol('values');
 const __yOffset__ = Symbol('yOffset');
 
 class Line extends THREE.Line {
-  constructor(amplitude, yOffset, color, opacity) {
+  /**
+   * @param {number} valuesCount Number of frequency points along the line.
+   * @param {number} amplitude Amplitude of the line.
+   * @param {number} yOffset Y offset of the line.
+   * @param {number} color The line's color.
+   * @param {number} opacity The line's opacity.
+   */
+  constructor(valuesCount, amplitude, yOffset, color, opacity) {
     let material = new THREE.LineBasicMaterial({
-      linewidth: 2,
+      linewidth: 1,
       color: color,
       opacity: opacity,
       blending: THREE.AdditiveBlending,
@@ -15,11 +22,11 @@ class Line extends THREE.Line {
     });
 
     let geometry = new THREE.Geometry();
-    geometry.vertices.push(
-        new THREE.Vector3(-1, yOffset, 0),
-        new THREE.Vector3(0, yOffset, 0),
-        new THREE.Vector3(1, yOffset, 0)
-    );
+    geometry.vertices.push(new THREE.Vector3(-1, yOffset, 0));
+    for (let i = 0; i < valuesCount * 2 - 1; i++) {
+      geometry.vertices.push(new THREE.Vector3((i + 1) / valuesCount - 1, yOffset, 0));
+    }
+    geometry.vertices.push(new THREE.Vector3(1, yOffset, 0))
 
     super(geometry, material);
 
@@ -35,8 +42,12 @@ class Line extends THREE.Line {
 
   set values(newValues) {
     this[__values__] = newValues;
-    for (let i = 1; i < this[__geometry__].vertices.length - 1; i++) {
-      this[__geometry__].vertices[i].y = this[__yOffset__] + newValues[i - 1] * this[__amplitude__];
+
+    let midIndex = (this[__geometry__].vertices.length - 1) / 2;
+    for (let i = 0; i < newValues.length; i++) {
+      this[__geometry__].vertices[midIndex - i].y = this[__yOffset__]
+          + newValues[i] * this[__amplitude__] * Math.pow(-1, i);
+      this[__geometry__].vertices[midIndex + i].y = this[__geometry__].vertices[midIndex - i].y;
     }
     this[__geometry__].verticesNeedUpdate = true;
   }
