@@ -1,17 +1,17 @@
 const __amplitude__ = Symbol('amplitude');
+const __audio__ = Symbol('audio');
 const __geometry__ = Symbol('geometry');
-const __values__ = Symbol('values');
 const __yOffset__ = Symbol('yOffset');
 
 class Line extends THREE.Line {
   /**
+   * @param {Audio} The Audio object.
    * @param {number} valuesCount Number of frequency points along the line.
-   * @param {number} amplitude Amplitude of the line.
    * @param {number} yOffset Y offset of the line.
    * @param {number} color The line's color.
    * @param {number} opacity The line's opacity.
    */
-  constructor(valuesCount, amplitude, yOffset, color, opacity) {
+  constructor(audio, amplitude, yOffset, color, opacity) {
     let material = new THREE.LineBasicMaterial({
       linewidth: 1,
       color: color,
@@ -21,6 +21,7 @@ class Line extends THREE.Line {
       transparent: true
     });
 
+    let valuesCount = audio.valuesCount;
     let geometry = new THREE.Geometry();
     geometry.vertices.push(new THREE.Vector3(-1, yOffset, 0));
     for (let i = 0; i < valuesCount * 2 - 1; i++) {
@@ -30,19 +31,17 @@ class Line extends THREE.Line {
 
     super(geometry, material);
 
+    this[__audio__] = audio;
     this[__amplitude__] = amplitude;
-    this[__values__] = 0;
     this[__yOffset__] = yOffset;
     this[__geometry__] = geometry;
   }
 
-  get values() {
-    return this[__values__];
-  }
-
-  set values(newValues) {
-    this[__values__] = newValues;
-
+  /**
+   * Called to update the line.
+   */
+  update() {
+    let newValues = this[__audio__].frequencyData;
     let midIndex = (this[__geometry__].vertices.length - 1) / 2;
     for (let i = 0; i < newValues.length; i++) {
       this[__geometry__].vertices[midIndex - i].y = this[__yOffset__]

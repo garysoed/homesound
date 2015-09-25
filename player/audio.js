@@ -1,13 +1,18 @@
 import Globals from './globals';
+import ArrayCache from './arraycache';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
 const __analyser__ = Symbol('analyser');
 const __context__ = Symbol('context');
 const __frequencyData__ = Symbol('frequencyData');
+const __normalizedFrequencyData__ = Symbol('normalizedFrequencyData');
+const __normalizedTimeDomainData__ = Symbol('normalizedTimeDomainData');
 const __path__ = Symbol('path');
 const __sourcePromise__ = Symbol('sourcePromise');
 const __timeDomainData__ = Symbol('timeDomainData');
+const __updateFrequencyData__ = Symbol('updateFrequencyData');
+const __updateTimeDomainData__ = Symbol('updateTimeDomainData');
 
 class Audio {
   constructor(path) {
@@ -16,8 +21,11 @@ class Audio {
     this[__analyser__] = this[__context__].createAnalyser();
     this[__analyser__].smoothingTimeConstant = 0.75;
     this[__analyser__].fftSize = Globals.SAMPLE_POINTS * 2;
+
     this[__frequencyData__] = new Uint8Array(this[__analyser__].frequencyBinCount);
     this[__timeDomainData__] = new Uint8Array(this[__analyser__].frequencyBinCount);
+    this[__normalizedFrequencyData__] = new ArrayCache(this[__updateFrequencyData__].bind(this));
+    this[__normalizedTimeDomainData__] = new ArrayCache(this[__updateTimeDomainData__].bind(this));
 
     this[__sourcePromise__] = new Promise(resolve => {
       let request = new XMLHttpRequest();
@@ -29,7 +37,7 @@ class Audio {
           let source = this[__context__].createBufferSource();
           source.connect(this[__context__].destination);
           source.connect(this[__analyser__]);
-          source.playbackRate.value = 2;
+          source.playbackRate.value = 1;
           source.buffer = buffer;
           source.loop = false;
           resolve(source);
@@ -37,6 +45,20 @@ class Audio {
       });
       request.send();
     });
+  }
+
+  [__updateFrequencyData__](array) {
+    this[__analyser__].getByteFrequencyData(this[__frequencyData__]);
+    for (let i = 0; i < this[__frequencyData__].length; i++) {
+      array[i] = this[__frequencyData__][i] / 256;
+    }
+  }
+
+  [__updateTimeDomainData__](array) {
+    this[__analyser__].getByteTimeDomainData(this[__timeDomainData__]);
+    for (let i = 0; i < this[__timeDomainData__].length; i++) {
+      array[i] = (this[__timeDomainData__][i] - 128) / 128;
+    }
   }
 
   /**
@@ -63,14 +85,24 @@ class Audio {
     });
   }
 
-  get currentFrequencyData() {
-    this[__analyser__].getByteFrequencyData(this[__frequencyData__]);
-    return this[__frequencyData__];
+  /**
+   * Called to update the audio.
+   */
+  update() {
+    this[__normalizedFrequencyData__].clear();
+    this[__normalizedTimeDomainData__].clear();
   }
 
-  get currentTimeDomainData() {
-    this[__analyser__].getByteTimeDomainData(this[__timeDomainData__]);
-    return this[__timeDomainData__];
+  get frequencyData() {
+    return this[__normalizedFrequencyData__].get();
+  }
+
+  get timeDomainData() {
+    return this[__normalizedTimeDomainData__].get();
+  }
+
+  get valuesCount() {
+    return this[__analyser__].frequencyBinCount;
   }
 }
 
