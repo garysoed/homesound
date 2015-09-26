@@ -61,12 +61,3 @@ describe('Audio', () => {
     });
   });
 });
-// HTTP/1.1 200 OK
-// server: ecstatic-0.7.6
-// etag: "141439953-3393664-Sat Feb 04 2012 14:50:30 GMT-0800 (PST)"
-// last-modified: Sat, 04 Feb 2012 22:50:30 GMT
-// cache-control: max-age=3600
-// content-length: 3393664
-// content-type: audio/mpeg; charset=utf-8
-// Date: Wed, 23 Sep 2015 06:22:25 GMT
-// Connection: keep-alive

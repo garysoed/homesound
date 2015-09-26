@@ -49,7 +49,7 @@ function compileFiles(entries) {
   return gulp.parallel(fns);
 }
 
-gulp.task('compile-tests', compileFiles('./player/*_test.js'));
+gulp.task('compile-tests', compileFiles('./player/**/*_test.js'));
 
 gulp.task('compile-player', function() {
   return compile('./player/index.js', 'player.js');
@@ -63,13 +63,13 @@ gulp.task('test', gulp.series(
 ));
 
 gulp.task('test-server', gulp.series(
-    gulp.task('compile-player'),
+    gulp.task('compile-tests'),
     function _test(done) {
       runKarma(false, done);
     }
 ));
 
 gulp.task('watch', function _watchSources() {
-  gulp.watch(['./player/*.js'], gulp.task('compile-player'));
-  gulp.watch(['./player/*_test.js', './player/*.js'], gulp.task('compile-tests'));
+  gulp.watch(['./player/**/*.js'], gulp.task('compile-player'));
+  gulp.watch(['./player/**/*_test.js', './player/**/*.js'], gulp.task('compile-tests'));
 });

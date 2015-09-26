@@ -1,4 +1,4 @@
-import ArrayCache from './arraycache';
+import ArrayCache from './array-cache';
 
 describe('ArrayCache', () => {
   let getFn;

@@ -1,5 +1,5 @@
 import Globals from './globals';
-import ArrayCache from './arraycache';
+import ArrayCache from './utils/array-cache';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 
@@ -8,15 +8,25 @@ const __context__ = Symbol('context');
 const __frequencyData__ = Symbol('frequencyData');
 const __normalizedFrequencyData__ = Symbol('normalizedFrequencyData');
 const __normalizedTimeDomainData__ = Symbol('normalizedTimeDomainData');
-const __path__ = Symbol('path');
+const __uri__ = Symbol('uri');
 const __sourcePromise__ = Symbol('sourcePromise');
 const __timeDomainData__ = Symbol('timeDomainData');
 const __updateFrequencyData__ = Symbol('updateFrequencyData');
 const __updateTimeDomainData__ = Symbol('updateTimeDomainData');
 
+/**
+ * Represents an audio source.
+ *
+ * @class Audio
+ */
 class Audio {
-  constructor(path) {
-    this[__path__] = path;
+
+  /**
+   * @param {string} uri URI to load the audio source.
+   * @constructor
+   */
+  constructor(uri) {
+    this[__uri__] = uri;
     this[__context__] = new AudioContext();
     this[__analyser__] = this[__context__].createAnalyser();
     this[__analyser__].smoothingTimeConstant = 0.75;
@@ -29,7 +39,7 @@ class Audio {
 
     this[__sourcePromise__] = new Promise(resolve => {
       let request = new XMLHttpRequest();
-      request.open('GET', path, true);
+      request.open('GET', uri, true);
       request.responseType = 'arraybuffer';
       request.addEventListener('load', () => {
         this[__context__].decodeAudioData(request.response, buffer => {
@@ -47,6 +57,13 @@ class Audio {
     });
   }
 
+  /**
+   * Updates the frequency data.
+   *
+   * @method __updateFrequencyData__
+   * @param {Uint8Array} array The array to contain the updated frequency data.
+   * @private
+   */
   [__updateFrequencyData__](array) {
     this[__analyser__].getByteFrequencyData(this[__frequencyData__]);
     for (let i = 0; i < this[__frequencyData__].length; i++) {
@@ -54,6 +71,13 @@ class Audio {
     }
   }
 
+  /**
+   * Updates the time domain data.
+   *
+   * @method __updateTimeDomainData__
+   * @param {Uint8Array} array The array to contain the updated time domain data.
+   * @private
+   */
   [__updateTimeDomainData__](array) {
     this[__analyser__].getByteTimeDomainData(this[__timeDomainData__]);
     for (let i = 0; i < this[__timeDomainData__].length; i++) {
@@ -93,15 +117,36 @@ class Audio {
     this[__normalizedTimeDomainData__].clear();
   }
 
+  /**
+   * The normalized frequency data.
+   *
+   * @property frequencyData
+   * @type Uint8Array
+   * @readonly
+   */
   get frequencyData() {
     return this[__normalizedFrequencyData__].get();
   }
 
+  /**
+   * The normalized time domain data.
+   *
+   * @property timeDomainData
+   * @type Uint8Array
+   * @readonly
+   */
   get timeDomainData() {
     return this[__normalizedTimeDomainData__].get();
   }
 
-  get valuesCount() {
+  /**
+   * The number of values in the frequency and time domain data array.
+   *
+   * @property dataCount
+   * @type number
+   * @readonly
+   */
+  get dataCount() {
     return this[__analyser__].frequencyBinCount;
   }
 }
