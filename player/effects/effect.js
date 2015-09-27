@@ -23,14 +23,6 @@ class Effect extends Updateable {
     throw Error('Unimplemented: populateScene');
   }
 
-  get visible() {
-    throw Error('Unimplemented: get visible');
-  }
-
-  set visible(isVisible) {
-    throw Error('Unimplemented: set visible');
-  }
-
   get x() {
     throw Error('Unimplemented: get X');
   }

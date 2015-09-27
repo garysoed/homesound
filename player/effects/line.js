@@ -64,7 +64,7 @@ class Line extends Effect {
     return this[__yOffset__];
   }
   set y(newYOffset) {
-    let diff = newYOffset - this[__yOffset__];
+    let diff = newYOffset - this.y;
     for (let i = 0; i < this[__geometry__].vertices.length; i++) {
       this[__geometry__].vertices[i].y += diff;
     }
@@ -73,23 +73,25 @@ class Line extends Effect {
   }
 
   get x() {
-    return this[__geometry__].vertices[0].x;
+    let vertices = this[__geometry__].vertices;
+    return (vertices[0].x + vertices[vertices.length - 1].x) / 2;
   }
 
   set x(newX) {
-    let diff = newX - this[__geometry__].vertices[0].x;
+    let diff = newX - this.x;
     for (let i = 0; i < this[__geometry__].vertices.length; i++) {
       this[__geometry__].vertices[i].x += diff;
     }
     this[__geometry__].verticesNeedUpdate = true;
   }
 
-  get visible() {
+  get isActive() {
     return this[__line__].visible;
   }
 
-  set visible(isVisible) {
-    this[__line__].visible = isVisible;
+  set isActive(active) {
+    super.isActive = active;
+    this[__line__].visible = active;
   }
 }
 

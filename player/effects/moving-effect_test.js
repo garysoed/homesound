@@ -13,14 +13,6 @@ describe('effect.MovingEffect', () => {
     movingEffect = new MovingEffect(effect, SPEED_X, SPEED_Y);
   });
 
-  describe('update', () => {
-    it('should call update on the effect', () => {
-      effect.update.and.stub();
-      movingEffect.update();
-      expect(effect.update).toHaveBeenCalledWith();
-    });
-  });
-
   describe('updateInternal', () => {
     it('should move the effect', () => {
       effect.x = 10;
@@ -68,17 +60,17 @@ describe('effect.MovingEffect', () => {
     });
   });
 
-  describe('get visible', () => {
-    it('should get visible from the effect', () => {
-      effect.visible = true;
-      expect(movingEffect.visible).toEqual(true);
+  describe('get isActive', () => {
+    it('should get isActive from the effect', () => {
+      effect.isActive = true;
+      expect(movingEffect.isActive).toEqual(true);
     });
   });
 
-  describe('set visible', () => {
-    it('should set the visible of the effect', () => {
-      movingEffect.visible = true;
-      expect(effect.visible).toEqual(true);
+  describe('set isActive', () => {
+    it('should set the isActive of the effect', () => {
+      movingEffect.isActive = true;
+      expect(effect.isActive).toEqual(true);
     });
   });
 });

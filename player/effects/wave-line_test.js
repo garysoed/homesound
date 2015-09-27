@@ -45,6 +45,8 @@ describe('effect.WaveLine', () => {
 
   describe('updateInternal', () => {
     it('should draw a line when the average frequency is high enough', () => {
+      spyOn(wave, 'addChild').and.callThrough();
+
       audio.frequencyData = [1, 1];
       audio.dataCount = 2;
       wave.updateInternal();
@@ -53,8 +55,10 @@ describe('effect.WaveLine', () => {
       expect(getPrivateProperty(wave, 'drawnLines').size).toEqual(1);
 
       let drawnLine = Array.from(getPrivateProperty(wave, 'drawnLines'))[0];
-      expect(drawnLine.visible).toEqual(true);
+      expect(drawnLine.isActive).toEqual(true);
       expect(drawnLine.y).toEqual(0);
+
+      expect(wave.addChild).toHaveBeenCalledWith(drawnLine);
     });
 
     it('should not draw a line when the average frequency is too low', () => {
@@ -80,26 +84,19 @@ describe('effect.WaveLine', () => {
       expect(getPrivateProperty(wave, 'drawnLines').size).toEqual(2);
     });
 
-    it('should update the drawn lines only', () => {
-      let movedLine = moveToDrawnArray(wave);
-      let undrawnLine = getPrivateProperty(wave, 'lines')[0];
-
-      wave.updateInternal();
-
-      expect(movedLine.update).toHaveBeenCalledWith();
-      expect(undrawnLine.update).not.toHaveBeenCalled();
-    });
-
     it('should hide the line if the line y coordinate is more than 1', () => {
       // Move an undrawn line to the drawn array.
       let movedLine = moveToDrawnArray(wave);
       movedLine.y = 2;
 
+      spyOn(wave, 'removeChild').and.callThrough();
+
       wave.updateInternal();
 
       expect(getPrivateProperty(wave, 'drawnLines').size).toEqual(0);
       expect(getPrivateProperty(wave, 'lines').length).toEqual(2);
-      expect(movedLine.visible).toEqual(false);
+      expect(movedLine.isActive).toEqual(false);
+      expect(wave.removeChild).toHaveBeenCalledWith(movedLine);
     });
 
     it('should hide the line if the line y coordinate is less than -1', () => {
@@ -111,7 +108,7 @@ describe('effect.WaveLine', () => {
 
       expect(getPrivateProperty(wave, 'drawnLines').size).toEqual(0);
       expect(getPrivateProperty(wave, 'lines').length).toEqual(2);
-      expect(movedLine.visible).toEqual(false);
+      expect(movedLine.isActive).toEqual(false);
     });
   });
 });

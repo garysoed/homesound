@@ -18,15 +18,8 @@ class MovingEffect extends Effect {
     this[__effect__] = effect;
     this[__speedX__] = speedX;
     this[__speedY__] = speedY;
-  }
 
-  /**
-   * @override
-   * @method update
-   */
-  update() {
-    super.update();
-    this[__effect__].update();
+    this.addChild(effect);
   }
 
   updateInternal(elapsedTime) {
@@ -56,12 +49,13 @@ class MovingEffect extends Effect {
     this[__effect__].y = newY;
   }
 
-  get visible() {
-    return this[__effect__].visible;
+  get isActive() {
+    return this[__effect__].isActive;
   }
 
-  set visible(isVisible) {
-    this[__effect__].visible = isVisible;
+  set isActive(active) {
+    super.isActive = active;
+    this[__effect__].isActive = active;
   }
 }
 
