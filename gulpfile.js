@@ -49,11 +49,16 @@ function compileFiles(entries) {
   return gulp.parallel(fns);
 }
 
-gulp.task('compile-tests', compileFiles('./player/**/*_test.js'));
+gulp.task('compile-tests', compileFiles('./src/**/*_test.js'));
 
-gulp.task('compile-player', function() {
-  return compile('./player/index.js', 'player.js');
-});
+gulp.task('compile-player', gulp.series(
+  function _compileJs() {
+    return compile('./src/player/index.js', 'player/index.js');
+  },
+  function _copyStatics() {
+    return gulp.src(['src/player/index.html', 'src/player/*.mp3'], { base: 'src' })
+        .pipe(gulp.dest('out'));
+  }));
 
 gulp.task('test', gulp.series(
     gulp.task('compile-tests'),
@@ -69,7 +74,10 @@ gulp.task('test-server', gulp.series(
     }
 ));
 
-gulp.task('watch', function _watchSources() {
-  gulp.watch(['./player/**/*.js'], gulp.task('compile-player'));
-  gulp.watch(['./player/**/*_test.js', './player/**/*.js'], gulp.task('compile-tests'));
-});
+gulp.task('watch', gulp.series(
+  'compile-player',
+  'compile-tests',
+  function _watchSources() {
+    gulp.watch(['./src/**/*'], gulp.task('compile-player'));
+    gulp.watch(['./src/**/*_test.js', './src/**/*.js'], gulp.task('compile-tests'));
+  }));

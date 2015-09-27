@@ -1,7 +1,0 @@
-const GLOBALS = {
-  LINE_COUNT: 2,
-  SAMPLE_POINTS: 128,
-  UPDATE_DELAY_MS: 250
-};
-
-export default GLOBALS;

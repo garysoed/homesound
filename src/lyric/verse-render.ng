@@ -1,0 +1,8 @@
+<span>
+  <span>
+    {{ctrl.text}}
+  </span>
+  <span>
+    {{ctrl.text}}
+  </span>
+</span>
