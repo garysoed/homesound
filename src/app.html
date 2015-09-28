@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <base href="..">
+  <base href=".">
   <head>
     <script src="../bower_components/three.js/three.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular-route.js"></script>
     <style>
       body { margin: 0; }
       canvas { width: 100%; height: 100% }
     </style>
   </head>
-  <body ng-app='lyra.PlayerApp'>
+  <body ng-app='lyra.App'>
     <div ng-view></div>
-    <script src="player/index.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>

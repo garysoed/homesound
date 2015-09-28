@@ -51,12 +51,12 @@ function compileFiles(entries) {
 
 gulp.task('compile-tests', compileFiles('./src/**/*_test.js'));
 
-gulp.task('compile-player', gulp.series(
+gulp.task('compile-app', gulp.series(
   function _compileJs() {
-    return compile('./src/player/index.js', 'player/index.js');
+    return compile('./src/app.js', 'app.js');
   },
   function _copyStatics() {
-    return gulp.src(['src/player/index.html', 'src/player/*.mp3'], { base: 'src' })
+    return gulp.src(['src/app.html', 'src/player/*.mp3', 'src/**/*.ng'], { base: 'src' })
         .pipe(gulp.dest('out'));
   }));
 
@@ -75,9 +75,9 @@ gulp.task('test-server', gulp.series(
 ));
 
 gulp.task('watch', gulp.series(
-  'compile-player',
+  'compile-app',
   'compile-tests',
   function _watchSources() {
-    gulp.watch(['./src/**/*'], gulp.task('compile-player'));
+    gulp.watch(['./src/**'], gulp.task('compile-app'));
     gulp.watch(['./src/**/*_test.js', './src/**/*.js'], gulp.task('compile-tests'));
   }));
