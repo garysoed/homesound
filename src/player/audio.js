@@ -109,6 +109,17 @@ class Audio {
     });
   }
 
+  toggle() {
+    switch (this[__context__].state) {
+      case 'suspended':
+        this[__context__].resume();
+        break;
+      case 'running':
+        this[__context__].suspend();
+        break;
+    }
+  }
+
   /**
    * Called to update the audio.
    */
@@ -148,6 +159,10 @@ class Audio {
    */
   get dataCount() {
     return this[__analyser__].frequencyBinCount;
+  }
+
+  get currentTime() {
+    return this[__context__].currentTime;
   }
 }
 

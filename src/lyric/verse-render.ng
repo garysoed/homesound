@@ -1,8 +1,19 @@
-<span>
-  <span>
+<span class="main">
+  <div class="template text">
     {{ctrl.text}}
-  </span>
-  <span>
+  </div>
+
+  <!-- Highlight -->
+  <div class="animated highlight text"
+      style="right: calc(100% - {{ctrl.percent}}%); color: {{ctrl.highlightColor}};">
     {{ctrl.text}}
-  </span>
+  </div>
+
+  <!-- Original -->
+  <div class="animated unhighlight-container text" style="left: {{ctrl.percent}}%;">
+    <div class="animated unhighlight text"
+        style="left: -{{ctrl.percent}}%; color: {{ctrl.unhighlightColor}};">
+      {{ctrl.text}}
+    </div>
+  </div>
 </span>

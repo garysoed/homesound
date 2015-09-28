@@ -25,7 +25,7 @@ window.it = function(description, runner, timeout) {
   }
 
   jasmineEnv.it(description, function(done) {
-    var rv = runner();
+    var rv = runner.call(this);
     if (rv instanceof Promise) {
       rv
           .then(done)
@@ -41,7 +41,7 @@ window.fit = function(description, runner, timeout) {
     jasmineEnv.fit(description, runner, timeout);
   } else {
     jasmineEnv.fit(description, function(done) {
-      var rv = runner();
+      var rv = runner.call(this);
       if (rv instanceof Promise) {
         rv
             .then(done)
@@ -58,7 +58,7 @@ window.beforeEach = function(runner, timeout) {
     jasmineEnv.beforeEach(runner, timeout);
   } else {
     jasmineEnv.beforeEach(function(done) {
-      var rv = runner();
+      var rv = runner.call(this);
       if (rv instanceof Promise) {
         rv
             .then(done)

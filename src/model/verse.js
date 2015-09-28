@@ -1,9 +1,11 @@
+import Updateable from '../utils/updateable';
+
 const __endTime__ = Symbol('endTime');
 const __singerId__ = Symbol('singerId');
 const __startTime__ = Symbol('startTime');
 const __text__ = Symbol('text');
 
-class Verse {
+export default class Verse {
   constructor(startTime, endTime, singerId, text) {
     this[__startTime__] = startTime;
     this[__endTime__] = endTime;

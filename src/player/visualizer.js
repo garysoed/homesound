@@ -1,16 +1,17 @@
 import Audio from './audio';
 import Line from '../visualizer/line';
+import Updateable from '../utils/updateable';
+import UpdateLoop from '../utils/update-loop';
 import WaveLine from '../visualizer/wave-line';
 
-const __audio__ = Symbol('audio');
 const __camera__ = Symbol('camera');
-const __line__ = Symbol('line');
 const __renderer__ = Symbol('renderer');
 const __scene__ = Symbol('scene');
-const __wave__ = Symbol('wave');
+const __updateLoop__ = Symbol('updateLoop');
 
-export class Ctrl {
+export class Ctrl extends Updateable {
   constructor($scope) {
+    super();
     this[__scene__] = new THREE.Scene();
     this[__camera__] = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 100);
 
@@ -19,22 +20,21 @@ export class Ctrl {
     });
     this[__renderer__].setSize(window.innerWidth, window.innerHeight);
 
-    this[__audio__] = $scope.audio;
-    this[__wave__] = new WaveLine(this[__audio__], 1, 200, 0.01);
-    this[__line__] = new Line(this[__audio__], 0.25, 0, 0x00ff00, 1);
+    let audio = $scope.audio;
+    let wave = new WaveLine(audio, 1, 200, 0.01);
+    let line = new Line(audio, 0.25, 0, 0x00ff00, 1);
 
-    this[__line__].populateScene(this[__scene__]);
-    this[__wave__].populateScene(this[__scene__]);
+    line.populateScene(this[__scene__]);
+    wave.populateScene(this[__scene__]);
 
-    this[__audio__].start();
-    this.render();
+    let updateLoop = $scope.updateLoop;
+    updateLoop.addChild(audio);
+    updateLoop.addChild(wave);
+    updateLoop.addChild(line);
+    updateLoop.addChild(this);
   }
 
-  render() {
-    requestAnimationFrame(this.render.bind(this));
-    this[__audio__].update();
-    this[__wave__].update();
-    this[__line__].update();
+  updateInternal() {
     this[__renderer__].render(this[__scene__], this[__camera__]);
   }
 
@@ -50,7 +50,8 @@ export default angular.module('lyra.player.Visualizer', [])
         controllerAs: 'ctrl',
         restrict: 'E',
         scope: {
-          'audio': '='
+          'audio': '=',
+          'updateLoop': '='
         },
         templateUrl: 'player/visualizer.ng',
         link(scope, element, attrs, ctrl) {

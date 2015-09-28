@@ -1,0 +1,36 @@
+ly-verse-render .main {
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+}
+
+ly-verse-render .text {
+  bottom: 0;
+  font-size: 15vh;
+  font-weight: 500;
+  top: 0;
+  white-space: nowrap;
+}
+
+ly-verse-render .template {
+  visibility: hidden;
+}
+
+ly-verse-render .animated {
+  overflow: hidden;
+  position: absolute;
+}
+
+ly-verse-render .unhighlight-container {
+  position: absolute;
+  width: 100%;
+}
+
+ly-verse-render .unhighlight {
+  color: green;
+}
+
+ly-verse-render .highlight {
+  color: white;
+  left: 0;
+}

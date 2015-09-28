@@ -16,6 +16,8 @@ module.exports = {
   files: [
     // Generated files
     { pattern: 'testbase.js', included: true },
+    { pattern: 'bower_components/angular/angular.js', included: true },
+    { pattern: 'bower_components/angular-mocks/angular-mocks.js', included: true },
     { pattern: 'bower_components/three.js/three.min.js', included: true }
   ],
 

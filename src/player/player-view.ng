@@ -1,3 +1,10 @@
 <div>
-  <ly-visualizer audio="ctrl.audio"></ly-visualizer>
+  <ly-visualizer
+      audio="ctrl.audio"
+      update-loop="ctrl.updateLoop"></ly-visualizer>
+  <ly-verse-render
+      audio="ctrl.audio"
+      verse="ctrl.verse"
+      update-loop="ctrl.updateLoop"></ly-verse-render>
+  <md-button ng-click="ctrl.toggleAudio()">Pause</md-button>
 </div>

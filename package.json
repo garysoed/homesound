@@ -26,6 +26,8 @@
     "glob": "^5.0.14",
     "gulp": "git://github.com/gulpjs/gulp.git#4.0",
     "gulp-babel": "^5.2.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-myth": "^1.0.3",
     "gulp-util": "^3.0.6",
     "gulp-watch": "^4.3.5",
     "jasmine-core": "^2.3.4",
